@@ -1,14 +1,13 @@
-const {getById} = require('../users/users-model');
+const User = require('../users/users-model');
 
 function logger(req, res, next) {
-  req.timestamp = Date.now();
+  req.timestamp = Date();
   console.log(req.method, req.url, req.timestamp);
   next();
 }
 
 async function validateUserId(req, res, next) {
-  console.log(req.params.id);
-  const user = await getById(req.params.id);
+  const user = await User.getById(req.params.id);
   if(user) {
     req.user = user;
     next();
@@ -19,23 +18,17 @@ async function validateUserId(req, res, next) {
 
 function validateUser(req, res, next) {
   const {name} = req.body;
-  console.log(name);
-  if(
-    name !== undefined 
-    && typeof name === 'string' 
-    && name.trim().length
-  ) {
+  if(name && name.trim().length) {
     next();
   } else {
-    console.log('bad');
     next({status: 400, message: 'missing required name field'});
   }
 }
 
+// removed user_id
 function validatePost(req, res, next) {
-  const {text, user_id} = req.body;
-  console.log(text, user_id);
-  if(text !== undefined && user_id !== undefined) {
+  const {text} = req.body;
+  if(text && text.trim().length) {
     next();
   } else {
     next({status: 400, message: 'missing required text field'});
