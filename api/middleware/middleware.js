@@ -18,11 +18,28 @@ async function validateUserId(req, res, next) {
 }
 
 function validateUser(req, res, next) {
-  next();
+  const {name} = req.body;
+  console.log(name);
+  if(
+    name !== undefined 
+    && typeof name === 'string' 
+    && name.trim().length
+  ) {
+    next();
+  } else {
+    console.log('bad');
+    next({status: 400, message: 'missing required name field'});
+  }
 }
 
 function validatePost(req, res, next) {
-  next();
+  const {text, user_id} = req.body;
+  console.log(text, user_id);
+  if(text !== undefined && user_id !== undefined) {
+    next();
+  } else {
+    next({status: 400, message: 'missing required text field'});
+  }
 }
 
 // do not forget to expose these functions to other modules
