@@ -31,14 +31,15 @@ router.post('/', logger, validateUser, async (req, res) => {
   // RETURN THE NEWLY CREATED USER OBJECT
   // this needs a middleware to check that the request body is valid
   const newUser = await User.insert(req.body);
-  console.log(newUser);
-  res.status(201).json('hi');
+  res.status(201).json(newUser);
 });
 
-router.put('/:id', logger, validateUserId, validateUser, (req, res) => {
+router.put('/:id', logger, validateUserId, validateUser, async (req, res) => {
   // RETURN THE FRESHLY UPDATED USER OBJECT
   // this needs a middleware to verify user id
   // and another middleware to check that the request body is valid
+  const updatedUser = await User.update(req.params.id, req.body);
+  res.status(200).json(updatedUser);
 });
 
 router.delete('/:id', logger, validateUserId, (req, res) => {
