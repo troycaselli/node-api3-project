@@ -17,16 +17,22 @@ const router = express.Router();
 router.get('/', logger, async (req, res) => {
   // RETURN AN ARRAY WITH ALL THE USERS
   const users = await User.get();
+  res.status(200).json(users);
 });
 
-router.get('/:id', logger, validateUserId, (req, res) => {
+router.get('/:id', logger, validateUserId, async (req, res) => {
   // RETURN THE USER OBJECT
   // this needs a middleware to verify user id
+  const user = await User.getById(req.params.id);
+  res.status(200).json(user);
 });
 
-router.post('/', logger, validateUser, (req, res) => {
+router.post('/', logger, validateUser, async (req, res) => {
   // RETURN THE NEWLY CREATED USER OBJECT
   // this needs a middleware to check that the request body is valid
+  const newUser = await User.insert(req.body);
+  console.log(newUser);
+  res.status(201).json('hi');
 });
 
 router.put('/:id', logger, validateUserId, validateUser, (req, res) => {
